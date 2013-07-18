@@ -338,6 +338,37 @@ class NessusXMLRPCrexml
     file=nessus_http_request('report/list', post)
     return file 
   end
+  
+        # get uids of reports
+        #
+        # returns: array of uids of reports
+        def report_list_uids
+                post = { "token" => @token }
+                docxml = nessus_request('report/list', post)
+                uuids = Array.new
+                docxml.root.elements['contents'].elements['reports'].each_element('//report') do |report| 
+                  uuids.push(report.elements['name'].text)
+                end
+                return uuids
+        end
+
+        # get hash of report data
+        # 
+        # returns: array of hash of reports
+        def report_list_hash
+                post = { "token" => @token }
+                docxml = nessus_request('report/list', post)
+                reports = Array.new
+                docxml.root.elements['contents'].elements['reports'].each_element('//report') do |report|
+                        entry = Hash.new
+                        entry['id'] = report.elements['name'].text
+                        entry['name'] = report.elements['readableName'].text
+                        entry['status'] = report.elements['status'].text;
+                        entry['timestamp'] = report.elements['timestamp'].text;
+                        reports.push(entry) 
+		end
+                return reports
+        end
 	
   # get report by reportID and return XML file
 	# 
@@ -541,6 +572,31 @@ class NessusXMLRPCnokogiri < NessusXMLRPCrexml
     file=nessus_http_request('report/list', post)
     return file 
   end
+  
+        def report_list_uids
+                post= { "token" => @token }
+                docxml=nessus_request('report/list', post)
+                return docxml.xpath("/reply/contents/reports/report/name").collect(&:text)
+        end
+
+	def report_list_hash
+                post = { "token" => @token }
+                docxml = nessus_request('report/list', post)
+                items = docxml.xpath("/reply/contents/reports/report")
+                retval = items.collect do |item|
+                        tmpitem = {}
+                        [
+                                [:id, 'name'],
+                                [:name, 'readableName'],
+                                [:status, 'status'],
+                                [:timestamp, 'timestamp']
+                        ].collect do |key, xpath|
+                        tmpitem[key] = item.at_xpath(xpath).content
+                        end
+                        tmpitem
+                end
+                return retval
+        end
 	
   def report_hosts(report_id)
 		post= { "token" => @token, "report" => report_id } 

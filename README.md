@@ -1,3 +1,9 @@
+# about this fork
+
+Changes to orginal include:
+  - Function added to download list of all reports in UID form
+  - Function added to download list of all reports included detailed information such as status, timestamp, id and name.
+
 # nessus-xmlrpc
 
 Nessus XML RPC library and Nessus Command Line interface to XML RPC
