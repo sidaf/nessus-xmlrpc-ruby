@@ -200,10 +200,10 @@ class NessusXMLRPCrexml
 		scans=Array.new
 		docxml.root.elements['contents'].elements['scans'].elements['scanList'].each_element('//scan') {|scan| 
 			entry=Hash.new
-			entry['id']=scan.elements['uuid'].text
-			entry['name']=scan.elements['readableName'].text
-			entry['current']=scan.elements['completion_current'].text;
-			entry['total']=scan.elements['completion_total'].text;		
+			entry[:id]=scan.elements['uuid'].text
+			entry[:name]=scan.elements['readableName'].text
+			entry[:current]=scan.elements['completion_current'].text;
+			entry[:total]=scan.elements['completion_total'].text;		
 			scans.push(entry) 
 		}
 		return scans
@@ -361,10 +361,10 @@ class NessusXMLRPCrexml
                 reports = Array.new
                 docxml.root.elements['contents'].elements['reports'].each_element('//report') do |report|
                         entry = Hash.new
-                        entry['id'] = report.elements['name'].text
-                        entry['name'] = report.elements['readableName'].text
-                        entry['status'] = report.elements['status'].text;
-                        entry['timestamp'] = report.elements['timestamp'].text;
+                        entry[:id] = report.elements['name'].text
+                        entry[:name] = report.elements['readableName'].text
+                        entry[:status] = report.elements['status'].text;
+                        entry[:timestamp] = report.elements['timestamp'].text;
                         reports.push(entry) 
 		end
                 return reports
@@ -430,9 +430,9 @@ class NessusXMLRPCrexml
 		docxml.root.elements['contents'].elements['hostList'].each_element('//host') { |host| 
 			if host.elements['hostname'].text == host
 				retval={}
-				retval["severity"] = host.elements['severity'].text
-				retval["current"] = host.elements['scanProgressCurrent'].text
-				retval["total"] = host.elements['scanProgressTotal'].text
+				retval[:severity] = host.elements['severity'].text
+				retval[:current] = host.elements['scanProgressCurrent'].text
+				retval[:total] = host.elements['scanProgressTotal'].text
 				return retval
 			end
 		}
